@@ -3,7 +3,7 @@
 
 #include "app_type.h"
 #include "component/buffer/buffer.h"
-#include "app/spidersens.h"
+
 
 #define UI_VIEW_MAX_V			6
 
@@ -16,7 +16,6 @@
 #define UI_SIGNAL_LEVEL_L	50
 
 #define ALTITUDE_FLOOR		15
-
 
 
 

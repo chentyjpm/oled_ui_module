@@ -3,9 +3,6 @@
 #include "ui_view.h"
 #include "app_type.h"
 
-
-
-
 struct ui_viewbtn_param_t
 {
 	struct ui_view_layout_t layout;

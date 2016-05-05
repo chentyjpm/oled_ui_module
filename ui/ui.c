@@ -1,8 +1,8 @@
 
+#include "bspconfig.h"
+
 #include "ui.h"
-#include "bsp/lcd.h"
 #include "string.h"
-#include "bsp/key.h"
 
 #define UI_REFREACH_TICK	10
 
@@ -66,7 +66,7 @@ vsf_err_t ui_onkey(struct ui_param_t *param, uint8_t key)
 	
 	view = &param->cell[curfocus];
 	
-	if (key == KEY_VALUE_KEY0)
+	if (key == KEY_VALUE_MENU)
 	{
 		//clear current focus
 		view->op->onfocus(view->param, false);
@@ -90,7 +90,7 @@ vsf_err_t ui_onkey(struct ui_param_t *param, uint8_t key)
 		return VSFERR_FAIL;
 	}
 	else
-	if (key == KEY_VALUE_KEY1)
+	if (key == KEY_VALUE_ENTER)
 	{
 		view->op->onevt(view->param, UI_VIEW_EVT_CLICK);
 		return VSFERR_NONE;

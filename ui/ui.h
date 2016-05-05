@@ -2,7 +2,6 @@
 #define BSP_UI_H
 
 #include "ui_view.h"
-#include "timer.h"
 	
 struct ui_cell_t
 {
@@ -16,7 +15,6 @@ struct ui_cell_t
 struct ui_param_t
 {
 	struct ui_cell_t 	cell[UI_CELL_MAX];
-	TIMER				tick;
 	uint8_t				focus;
 };
 
