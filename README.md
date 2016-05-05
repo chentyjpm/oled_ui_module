@@ -5,122 +5,135 @@ oled_ui_module software framework
 create by chenty
 
 
-ÕâÊÇÎÒĞ´µÄÒ»¸öuiÖ§³Ö¿â
+è¿™æ˜¯æˆ‘å†™çš„ä¸€ä¸ªuiæ”¯æŒåº“
 
-Ğ­ÒéÖ÷ÒªÓÃÓÚ ÀàËÆ 5110 ÕâÖÖµ¥É« 8Î»µÄ lcd »ò OLEDµÄÏÔÊ¾Çı¶¯
+åè®®ä¸»è¦ç”¨äº ç±»ä¼¼ 5110 è¿™ç§å•è‰² 8ä½çš„ lcd æˆ– OLEDçš„æ˜¾ç¤ºé©±åŠ¨
 
-ui¿âµÄÉè¼Æ±È½Ï¼òµ¥ Ô­ÀíÊÇ°ÑÒ»¸öÆÁÄ»»®·Ö³ÉÒ»¸öÒ»¸öµÄ¿Ø¼ş È»ºó¹ÒÔØ²»Í¬µÄ¿Ø¼şÊµÏÖÏÔÊ¾ÒÔ¼°²»Í¬µÄ¹¦ÄÜ
+uiåº“çš„è®¾è®¡æ¯”è¾ƒç®€å• åŸç†æ˜¯æŠŠä¸€ä¸ªå±å¹•åˆ’åˆ†æˆä¸€ä¸ªä¸€ä¸ªçš„æ§ä»¶ ç„¶åæŒ‚è½½ä¸åŒçš„æ§ä»¶å®ç°æ˜¾ç¤ºä»¥åŠä¸åŒçš„åŠŸèƒ½
 
-È¥³ıÁËºÍÉÏ²ãÒÔ¼°µ×²ãµÄ¹ØÁª Ä£¿é»¯¶ÀÁ¢³öÀ´ ÒÔ±ãÒÆÖ²ºÍÊ¹ÓÃ
+å»é™¤äº†å’Œä¸Šå±‚ä»¥åŠåº•å±‚çš„å…³è” æ¨¡å—åŒ–ç‹¬ç«‹å‡ºæ¥ ä»¥ä¾¿ç§»æ¤å’Œä½¿ç”¨
 
-Ä¿Ç°ÊµÏÖµÄ¿Ø¼şÓĞ3¸ö
+ç›®å‰å®ç°çš„æ§ä»¶æœ‰3ä¸ª
 
-str	ÎÄ±¾¿Ø¼ş
-img 	Í¼Æ¬¿Ø¼ş
-btn	°´Å¥¿Ø¼ş
+str	æ–‡æœ¬æ§ä»¶
+img 	å›¾ç‰‡æ§ä»¶
+btn	æŒ‰é’®æ§ä»¶
 
-ËùÓĞµÄÏÔÊ¾¿Ø¼şÅÉÉúÓÚÏàÍ¬µÄ»ùÀà view
-struct ui_view_param_t
-{
-	struct ui_view_layout_t layout;
-	uint32_t	flags;
-};
+æ‰€æœ‰çš„æ˜¾ç¤ºæ§ä»¶æ´¾ç”Ÿäºç›¸åŒçš„åŸºç±» view
 
-¿Ø¼şÊµÏÖÒÔÏÂ·½·¨
-struct ui_view_op_t
-{
-	vsf_err_t 			(*init)(void *param);
-	vsf_err_t 			(*fini)(void *param);
-	struct ui_view_layout_t* 	(*onlayout)(void *param);
-	vsf_err_t 			(*ondraw)(void *param, struct ui_view_buf_t *viewbuf);
-	vsf_err_t			(*onfocus)(void *param, uint8_t isfocused);
-	vsf_err_t 			(*onevt)(void *param, uint8_t evt);
-};
+	struct ui_view_param_t
+	{
+		struct ui_view_layout_t layout;
+		uint32_t	flags;
+	};
 
-ui¿âÍ¨¹ıµ÷ÓÃ²»Í¬µÄ·½·¨À´ÊµÏÖ¿Ø¼şµÄÏÔÊ¾ ¾Û½¹ µã»÷
+æ§ä»¶å®ç°ä»¥ä¸‹æ–¹æ³•
 
+	struct ui_view_op_t
+	{
+		vsf_err_t 			(*init)(void *param);
+		vsf_err_t 			(*fini)(void *param);
+		struct ui_view_layout_t* 	(*onlayout)(void *param);
+		vsf_err_t 			(*ondraw)(void *param, struct ui_view_buf_t *viewbuf);
+		vsf_err_t			(*onfocus)(void *param, uint8_t isfocused);
+		vsf_err_t 			(*onevt)(void *param, uint8_t evt);
+	};
 
-ui¿âµÄÊ¹ÓÃ·½·¨´ÓÏÂ
+uiåº“é€šè¿‡è°ƒç”¨ä¸åŒçš„æ–¹æ³•æ¥å®ç°æ§ä»¶çš„æ˜¾ç¤º èšç„¦ ç‚¹å‡»
 
-Ê×ÏÈĞèÒªÌá¹©µÄÅäÖÃ²ÎÊı
+uiåº“çš„ä½¿ç”¨æ–¹æ³•ä»ä¸‹
 
-ÏÔÊ¾ÇøÓò³¤¶È
-#define DISP_SIZE_H		128
-ÏÔÊ¾ÇøÓòĞĞÊı ¶ÔÓÚoled »òÕß 5510ÕâÖÖµ¥É«ÆÁÄ»
-#define DISP_SIZE_V		8
-¿Ø¼ş×î´óÊıÁ¿
-#define UI_CELL_MAX		20
+é¦–å…ˆéœ€è¦æä¾›çš„é…ç½®å‚æ•°
 
-°´¼üºê 
-²Ëµ¥¼ü¼üÖµ
-#define KEY_VALUE_MENU			KEY_VALUE_KEY0
-È·¶¨¼ü¼üÖµ
-#define KEY_VALUE_ENTER			KEY_VALUE_KEY1
+æ˜¾ç¤ºåŒºåŸŸé•¿åº¦
 
+	#define DISP_SIZE_H		128
+æ˜¾ç¤ºåŒºåŸŸè¡Œæ•° å¯¹äºoled æˆ–è€… 5510è¿™ç§å•è‰²å±å¹•
 
+	#define DISP_SIZE_V		8
+æ§ä»¶æœ€å¤§æ•°é‡
 
+	#define UI_CELL_MAX		20
 
-Ê×ÏÈĞèÒª¶¨Òå uiÊ¹ÓÃµÄ¿Õ¼ä Ò»°ãµ¥Æ¬»ú»·¾³ ¾Í³õÊ¼»¯¾²Ì¬½á¹¹Ìå¼´¿É
-Èç struct ui_param_t ui;
+æŒ‰é”®å® 
+èœå•é”®é”®å€¼
 
-ÕâÊÇuiÄ£¿éÌá¹©µ÷ÓÃµÄ·½·¨
-struct ui_op_t
-{
-	vsf_err_t 	(*init)(struct ui_param_t *param);
-	vsf_err_t 	(*fini)(struct ui_param_t *param);
-	vsf_err_t 	(*ondisp)(struct ui_param_t *param, struct vsf_buffer_t *dpbuf);
-	vsf_err_t 	(*onkey)(struct ui_param_t *param, uint8_t key);	
-	vsf_err_t	(*addview)(struct ui_param_t *param, void *view, const struct ui_view_op_t *type);
-	vsf_err_t	(*delview)(struct ui_param_t *param, void *view);
-};
+	#define KEY_VALUE_MENU			KEY_VALUE_KEY0
+ç¡®å®šé”®é”®å€¼
+
+	#define KEY_VALUE_ENTER			KEY_VALUE_KEY1
 
 
-Ê×ÏÈĞèÒª¶ÔuiÄ£¿é³õÊ¼»¯
-ui_op.init(&ui);
-
-È»ºóui Ä£¿é¾Í¿ÉÒÔÊ¹ÓÃÁË
-ÕâÊ±Ã»ÓĞÈÎºÎ¿Ø¼ş ËùÒÔĞèÒª ×¢²á¿Ø¼ş¸øuiÄ£¿é
-¿Ø¼ş¿ÉÒÔÎª³£Á¿ Ò²¿ÉÒÔÎª±äÁ¿ ÎªÁË½ÚÊ¡ÄÚ´æ ²»±äµÄÏÔÊ¾ÄÚÈİ¿ÉÒÔ´æ´¢ÔÚflashÀïÃæ
-
-ÀıÈç ÎÄ±¾¿Ø¼ş
-const struct ui_viewstr_param_t bootstring = 
-{
-	{0, 6, 128, 2}, UI_VIEW_FLAG_ENABLE,
-	"ÕıÔÚ¿ª»ú" ,UI_VIEW_STRBIG
-};
-
-¿Ø¼şµÄ×¢²áĞèÒªÌá¹©2¸ö²ÎÊı Ò»¸öÊÇ¿Ø¼ş±¾ÉíµÄ½á¹¹Ìå Ò»¸öÊÇ¿Ø¼şµÄ·½·¨ Õâ¸öµØ·½Ó¦¸ÃÓĞ¸Ä½øµÄ¿Ø¼ş ³õÆÚÉè¼ÆÊÇÕâÑù×öµÄ
-ui_op.addview(&ui, (void *)&bootstring, &ui_viewstr_op);
-
-ÕâÊ±¿Ø¼ş¾Í×¢²áºÃÁË
-ÈçºÎÏÔÊ¾³öÀ´ÄØ
-
-ĞèÒªÈçÏÂ²½Öè 
-Ê×ÏÈĞèÒªÌá¹©Ò»¸ö¿ÉÒÔÏÔÊ¾ÇøÓòµÄÄÚ´æ
-Í¨¹ıstruct vsf_buffer_t ½á¹¹Ìå´«Èë
-ÏÔÊ¾ÄÚ´æ¿Õ¼äĞèÒª°²×° 0 1 2 3 ĞĞË³ĞòÅÅ²¼ £¨Ä¿Ç°£©
-
-Ã¿´Îµ÷ÓÃ ui_op.ondisp(&ui, &dpbuf); »áË¢ĞÂÒ»´ÎÏÔÊ¾ ÔÚbtn ¿Ø¼şÖĞ Õâ¸öË¢ĞÂËÙ¶È¾ÍÊÇfocusÉÁË¸µÄËÙ¶È
-
-½¨ÒéÓÃ·¨ÊÇ ÔÚ¶¨Ê±Æ÷ÖĞÑ­»·µ÷ÓÃ Í¬Ê±ÔÚ¸üĞÂÄÚÈİÊ± Ö±½Óµ÷ÓÃ
 
 
-³öÏÖ°´¼üÊÂ¼şÊÇ ĞèÒª½«°´¼üevt ´«µİ¸øuiÄ£¿é ui»á×Ô¶¯×ö³öÇĞ»»focus »òÕß µ÷ÓÃ¿Ø¼ş clickÊÂ¼şµÈ²Ù×÷
+é¦–å…ˆéœ€è¦å®šä¹‰ uiä½¿ç”¨çš„ç©ºé—´ ä¸€èˆ¬å•ç‰‡æœºç¯å¢ƒ å°±åˆå§‹åŒ–é™æ€ç»“æ„ä½“å³å¯
 
-·½·¨ÊÇ ui_op.onkey(&ui, keyvalue);
+	struct ui_param_t ui;
+
+è¿™æ˜¯uiæ¨¡å—æä¾›è°ƒç”¨çš„æ–¹æ³•
+
+	struct ui_op_t
+	{
+		vsf_err_t 	(*init)(struct ui_param_t *param);
+		vsf_err_t 	(*fini)(struct ui_param_t *param);
+		vsf_err_t 	(*ondisp)(struct ui_param_t *param, struct vsf_buffer_t *dpbuf);
+		vsf_err_t 	(*onkey)(struct ui_param_t *param, uint8_t key);	
+		vsf_err_t	(*addview)(struct ui_param_t *param, void *view, const struct ui_view_op_t *type);
+		vsf_err_t	(*delview)(struct ui_param_t *param, void *view);
+	};
 
 
-µ±½çÃæ¹Ø±Õ »òÕßÇĞ»»Ê± ÓĞ2ÖÖ·½Ê½ Ò»ÖÖ¿ÉÒÔ°Ñ¿Ø¼şDISABLE Ò»ÖÖÊÇdel¿Ø¼ş
+é¦–å…ˆéœ€è¦å¯¹uiæ¨¡å—åˆå§‹åŒ–
+	
+	ui_op.init(&ui);
 
-del¿Ø¼şÊÇÕâÑù²Ù×÷µÄ
-ui_op.delview(&ui, (void *)&bootstring);
+ç„¶åui æ¨¡å—å°±å¯ä»¥ä½¿ç”¨äº†
+è¿™æ—¶æ²¡æœ‰ä»»ä½•æ§ä»¶ æ‰€ä»¥éœ€è¦ æ³¨å†Œæ§ä»¶ç»™uiæ¨¡å—
+æ§ä»¶å¯ä»¥ä¸ºå¸¸é‡ ä¹Ÿå¯ä»¥ä¸ºå˜é‡ ä¸ºäº†èŠ‚çœå†…å­˜ ä¸å˜çš„æ˜¾ç¤ºå†…å®¹å¯ä»¥å­˜å‚¨åœ¨flashé‡Œé¢
 
-µ±²»ĞèÒªuiÊÍ·ÅÄÚ´æÊ±µ÷ÓÃ 
-ui_op.fini(&ui);
+ä¾‹å¦‚ æ–‡æœ¬æ§ä»¶
 
-¶¯Ì¬·ÖÅäµÄÄÚ´æui²»»áÊÍ·ÅĞèÒª¸ù¾İÏµÍ³»·¾³µ÷ÓÃÏàÓ¦µÄº¯ÊıÊÍ·ÅÄÚ´æ
+	const struct ui_viewstr_param_t bootstring = 
+	{
+		{0, 6, 128, 2}, UI_VIEW_FLAG_ENABLE,
+		"æ­£åœ¨å¼€æœº" ,UI_VIEW_STRBIG
+	};
 
-Todo:¿Ø¼şÊ¹ÓÃÏê½â
+æ§ä»¶çš„æ³¨å†Œéœ€è¦æä¾›2ä¸ªå‚æ•° ä¸€ä¸ªæ˜¯æ§ä»¶æœ¬èº«çš„ç»“æ„ä½“ ä¸€ä¸ªæ˜¯æ§ä»¶çš„æ–¹æ³• è¿™ä¸ªåœ°æ–¹åº”è¯¥æœ‰æ”¹è¿›çš„æ§ä»¶ åˆæœŸè®¾è®¡æ˜¯è¿™æ ·åšçš„
+
+	ui_op.addview(&ui, (void *)&bootstring, &ui_viewstr_op);
+
+è¿™æ—¶æ§ä»¶å°±æ³¨å†Œå¥½äº†
+å¦‚ä½•æ˜¾ç¤ºå‡ºæ¥å‘¢
+
+éœ€è¦å¦‚ä¸‹æ­¥éª¤ 
+é¦–å…ˆéœ€è¦æä¾›ä¸€ä¸ªå¯ä»¥æ˜¾ç¤ºåŒºåŸŸçš„å†…å­˜
+é€šè¿‡ ` struct vsf_buffer_t ` ç»“æ„ä½“ä¼ å…¥
+æ˜¾ç¤ºå†…å­˜ç©ºé—´éœ€è¦å®‰è£… 0 1 2 3 è¡Œé¡ºåºæ’å¸ƒ ï¼ˆç›®å‰ï¼‰
+
+æ¯æ¬¡è°ƒç”¨ ` ui_op.ondisp(&ui, &dpbuf);` ä¼šåˆ·æ–°ä¸€æ¬¡æ˜¾ç¤º åœ¨btn æ§ä»¶ä¸­ è¿™ä¸ªåˆ·æ–°é€Ÿåº¦å°±æ˜¯focusé—ªçƒçš„é€Ÿåº¦
+
+å»ºè®®ç”¨æ³•æ˜¯ åœ¨å®šæ—¶å™¨ä¸­å¾ªç¯è°ƒç”¨ åŒæ—¶åœ¨æ›´æ–°å†…å®¹æ—¶ ç›´æ¥è°ƒç”¨
+
+
+å‡ºç°æŒ‰é”®äº‹ä»¶æ˜¯ éœ€è¦å°†æŒ‰é”®evt ä¼ é€’ç»™uiæ¨¡å— uiä¼šè‡ªåŠ¨åšå‡ºåˆ‡æ¢focus æˆ–è€… è°ƒç”¨æ§ä»¶ clickäº‹ä»¶ç­‰æ“ä½œ
+
+æ–¹æ³•æ˜¯ `ui_op.onkey(&ui, keyvalue);`
+
+
+å½“ç•Œé¢å…³é—­ æˆ–è€…åˆ‡æ¢æ—¶ æœ‰2ç§æ–¹å¼ ä¸€ç§å¯ä»¥æŠŠæ§ä»¶DISABLE ä¸€ç§æ˜¯delæ§ä»¶
+
+delæ§ä»¶æ˜¯è¿™æ ·æ“ä½œçš„
+
+	ui_op.delview(&ui, (void *)&bootstring);
+
+å½“ä¸éœ€è¦uié‡Šæ”¾å†…å­˜æ—¶è°ƒç”¨ 
+
+	ui_op.fini(&ui);
+
+åŠ¨æ€åˆ†é…çš„å†…å­˜uiä¸ä¼šé‡Šæ”¾éœ€è¦æ ¹æ®ç³»ç»Ÿç¯å¢ƒè°ƒç”¨ç›¸åº”çš„å‡½æ•°é‡Šæ”¾å†…å­˜
+
+Todo:æ§ä»¶ä½¿ç”¨è¯¦è§£
 
 
 
