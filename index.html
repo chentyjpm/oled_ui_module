@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Oled ui module : oled simple driver of a single color oled">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Oled ui module</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/chentyjpm/oled_ui_module">View on GitHub</a>
+
+          <h1 id="project_title">Oled ui module</h1>
+          <h2 id="project_tagline">oled simple driver of a single color oled</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/chentyjpm/oled_ui_module/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/chentyjpm/oled_ui_module/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="oled_ui_module" class="anchor" href="#oled_ui_module" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>oled_ui_module</h1>
+
+<p>oled_ui_module software framework
+create by chenty</p>
+
+<p>这是我写的一个ui支持库</p>
+
+<p>协议主要用于 类似 5110 这种单色 8位的 lcd 或 OLED的显示驱动</p>
+
+<p>ui库的设计比较简单 原理是把一个屏幕划分成一个一个的控件 然后挂载不同的控件实现显示以及不同的功能</p>
+
+<p>去除了和上层以及底层的关联 模块化独立出来 以便移植和使用</p>
+
+<p>目前实现的控件有3个</p>
+
+<p>str 文本控件
+img     图片控件
+btn 按钮控件</p>
+
+<p>所有的显示控件派生于相同的基类 view</p>
+
+<pre><code>struct ui_view_param_t
+{
+    struct ui_view_layout_t layout;
+    uint32_t    flags;
+};
+</code></pre>
+
+<p>控件实现以下方法</p>
+
+<pre><code>struct ui_view_op_t
+{
+    vsf_err_t           (*init)(void *param);
+    vsf_err_t           (*fini)(void *param);
+    struct ui_view_layout_t*    (*onlayout)(void *param);
+    vsf_err_t           (*ondraw)(void *param, struct ui_view_buf_t *viewbuf);
+    vsf_err_t           (*onfocus)(void *param, uint8_t isfocused);
+    vsf_err_t           (*onevt)(void *param, uint8_t evt);
+};
+</code></pre>
+
+<p>ui库通过调用不同的方法来实现控件的显示 聚焦 点击</p>
+
+<p>ui库的使用方法从下</p>
+
+<p>首先需要提供的配置参数</p>
+
+<p>显示区域长度</p>
+
+<pre><code>#define DISP_SIZE_H     128
+</code></pre>
+
+<p>显示区域行数 对于oled 或者 5510这种单色屏幕</p>
+
+<pre><code>#define DISP_SIZE_V     8
+</code></pre>
+
+<p>控件最大数量</p>
+
+<pre><code>#define UI_CELL_MAX     20
+</code></pre>
+
+<p>按键宏 
+菜单键键值</p>
+
+<pre><code>#define KEY_VALUE_MENU          KEY_VALUE_KEY0
+</code></pre>
+
+<p>确定键键值</p>
+
+<pre><code>#define KEY_VALUE_ENTER         KEY_VALUE_KEY1
+</code></pre>
+
+<p>首先需要定义 ui使用的空间 一般单片机环境 就初始化静态结构体即可</p>
+
+<pre><code>struct ui_param_t ui;
+</code></pre>
+
+<p>这是ui模块提供调用的方法</p>
+
+<pre><code>struct ui_op_t
+{
+    vsf_err_t   (*init)(struct ui_param_t *param);
+    vsf_err_t   (*fini)(struct ui_param_t *param);
+    vsf_err_t   (*ondisp)(struct ui_param_t *param, struct vsf_buffer_t *dpbuf);
+    vsf_err_t   (*onkey)(struct ui_param_t *param, uint8_t key);    
+    vsf_err_t   (*addview)(struct ui_param_t *param, void *view, const struct ui_view_op_t *type);
+    vsf_err_t   (*delview)(struct ui_param_t *param, void *view);
+};
+</code></pre>
+
+<p>首先需要对ui模块初始化</p>
+
+<pre><code>ui_op.init(&amp;ui);
+</code></pre>
+
+<p>然后ui 模块就可以使用了
+这时没有任何控件 所以需要 注册控件给ui模块
+控件可以为常量 也可以为变量 为了节省内存 不变的显示内容可以存储在flash里面</p>
+
+<p>例如 文本控件</p>
+
+<pre><code>const struct ui_viewstr_param_t bootstring = 
+{
+    {0, 6, 128, 2}, UI_VIEW_FLAG_ENABLE,
+    "正在开机" ,UI_VIEW_STRBIG
+};
+</code></pre>
+
+<p>控件的注册需要提供2个参数 一个是控件本身的结构体 一个是控件的方法 这个地方应该有改进的控件 初期设计是这样做的</p>
+
+<pre><code>ui_op.addview(&amp;ui, (void *)&amp;bootstring, &amp;ui_viewstr_op);
+</code></pre>
+
+<p>这时控件就注册好了
+如何显示出来呢</p>
+
+<p>需要如下步骤 
+首先需要提供一个可以显示区域的内存
+通过 <code>struct vsf_buffer_t</code> 结构体传入
+显示内存空间需要安装 0 1 2 3 行顺序排布 （目前）</p>
+
+<p>每次调用 <code>ui_op.ondisp(&amp;ui, &amp;dpbuf);</code> 会刷新一次显示 在btn 控件中 这个刷新速度就是focus闪烁的速度</p>
+
+<p>建议用法是 在定时器中循环调用 同时在更新内容时 直接调用</p>
+
+<p>出现按键事件是 需要将按键evt 传递给ui模块 ui会自动做出切换focus 或者 调用控件 click事件等操作</p>
+
+<p>方法是 <code>ui_op.onkey(&amp;ui, keyvalue);</code></p>
+
+<p>当界面关闭 或者切换时 有2种方式 一种可以把控件DISABLE 一种是del控件</p>
+
+<p>del控件是这样操作的</p>
+
+<pre><code>ui_op.delview(&amp;ui, (void *)&amp;bootstring);
+</code></pre>
+
+<p>当不需要ui释放内存时调用 </p>
+
+<pre><code>ui_op.fini(&amp;ui);
+</code></pre>
+
+<p>动态分配的内存ui不会释放需要根据系统环境调用相应的函数释放内存</p>
+
+<p>控件使用详解见对应Readme</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Oled ui module maintained by <a href="https://github.com/chentyjpm">chentyjpm</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
