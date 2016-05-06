@@ -1,4 +1,4 @@
-oled_ui_module
+﻿oled_ui_module
 ===
 
 oled_ui_module software framework
@@ -133,7 +133,7 @@ del控件是这样操作的
 
 动态分配的内存ui不会释放需要根据系统环境调用相应的函数释放内存
 
-Todo:控件使用详解
+控件使用详解见对应Readme
 
 
 
